@@ -1,6 +1,14 @@
 import type { Lesson, Track } from "@/data/lessons";
 
-const base = () => (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
+/** Origem da API (sem barra final). Se VITE_API_BASE_URL acabar em /api, remove-se para não duplicar /api nos paths. */
+function apiOrigin(): string {
+  let o = (import.meta.env.VITE_API_BASE_URL ?? "").trim();
+  o = o.replace(/\/+$/, "");
+  if (o.endsWith("/api")) {
+    o = o.slice(0, -4).replace(/\/+$/, "");
+  }
+  return o;
+}
 
 const cred: RequestInit = { credentials: "include" };
 
@@ -29,13 +37,13 @@ export type AuthUser = {
 };
 
 export async function fetchMe(): Promise<AuthUser | null> {
-  const res = await fetch(`${base()}/api/auth/me`, cred);
+  const res = await fetch(`${apiOrigin()}/api/auth/me`, cred);
   const j = await parseJson<{ user: AuthUser | null }>(res);
   return j.user;
 }
 
 export async function postLogin(email: string, password: string): Promise<AuthUser> {
-  const res = await fetch(`${base()}/api/auth/login`, {
+  const res = await fetch(`${apiOrigin()}/api/auth/login`, {
     ...cred,
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -46,7 +54,7 @@ export async function postLogin(email: string, password: string): Promise<AuthUs
 }
 
 export async function postRegister(email: string, password: string, name?: string): Promise<AuthUser> {
-  const res = await fetch(`${base()}/api/auth/register`, {
+  const res = await fetch(`${apiOrigin()}/api/auth/register`, {
     ...cred,
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -57,17 +65,17 @@ export async function postRegister(email: string, password: string, name?: strin
 }
 
 export async function postLogout(): Promise<void> {
-  const res = await fetch(`${base()}/api/auth/logout`, { ...cred, method: "POST" });
+  const res = await fetch(`${apiOrigin()}/api/auth/logout`, { ...cred, method: "POST" });
   await parseJson<{ ok: boolean }>(res);
 }
 
 export async function fetchTracks(): Promise<Track[]> {
-  const res = await fetch(`${base()}/api/tracks`, cred);
+  const res = await fetch(`${apiOrigin()}/api/tracks`, cred);
   return parseJson<Track[]>(res);
 }
 
 export async function fetchTrack(trackId: string): Promise<Track> {
-  const res = await fetch(`${base()}/api/tracks/${encodeURIComponent(trackId)}`, cred);
+  const res = await fetch(`${apiOrigin()}/api/tracks/${encodeURIComponent(trackId)}`, cred);
   return parseJson<Track>(res);
 }
 
@@ -81,7 +89,7 @@ export type LessonPayload = {
 
 export async function fetchLesson(trackId: string, lessonId: string): Promise<LessonPayload> {
   const res = await fetch(
-    `${base()}/api/tracks/${encodeURIComponent(trackId)}/lessons/${encodeURIComponent(lessonId)}`,
+    `${apiOrigin()}/api/tracks/${encodeURIComponent(trackId)}/lessons/${encodeURIComponent(lessonId)}`,
     cred,
   );
   return parseJson<LessonPayload>(res);

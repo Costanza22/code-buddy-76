@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Express } from "express";
+import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { readUsers, writeUsers, type StoredUser } from "./usersStore.ts";
 
@@ -10,7 +11,9 @@ function publicUser(u: StoredUser) {
 }
 
 export function registerAuthRoutes(app: Express): void {
-  app.get("/api/auth/me", (req, res) => {
+  const r = Router();
+
+  r.get("/me", (req, res) => {
     const sid = req.session.userId;
     if (!sid) {
       res.json({ user: null });
@@ -25,7 +28,7 @@ export function registerAuthRoutes(app: Express): void {
     res.json({ user: publicUser(u) });
   });
 
-  app.post("/api/auth/register", (req, res) => {
+  r.post("/register", (req, res) => {
     const { email, password, name } = req.body as {
       email?: string;
       password?: string;
@@ -62,7 +65,7 @@ export function registerAuthRoutes(app: Express): void {
     res.status(201).json({ user: publicUser(user) });
   });
 
-  app.post("/api/auth/login", (req, res) => {
+  r.post("/login", (req, res) => {
     const { email, password } = req.body as { email?: string; password?: string };
     if (!email || !password || typeof email !== "string" || typeof password !== "string") {
       res.status(400).json({ error: "Email e palavra-passe são obrigatórios." });
@@ -78,7 +81,7 @@ export function registerAuthRoutes(app: Express): void {
     res.json({ user: publicUser(user) });
   });
 
-  app.post("/api/auth/logout", (req, res) => {
+  r.post("/logout", (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         res.status(500).json({ error: "Não foi possível terminar a sessão." });
@@ -88,4 +91,6 @@ export function registerAuthRoutes(app: Express): void {
       res.json({ ok: true });
     });
   });
+
+  app.use("/api/auth", r);
 }

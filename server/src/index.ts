@@ -63,9 +63,10 @@ app.use(
 );
 
 registerAuthRoutes(app);
+console.log("[api] rotas de sessão: GET/POST /api/auth/me | /register | /login | /logout");
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "code-buddy-api" });
+  res.json({ ok: true, service: "code-buddy-api", auth: true });
 });
 
 app.get("/api/tracks", (_req, res, next) => {

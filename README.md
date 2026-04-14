@@ -19,7 +19,7 @@ Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScr
 |----------|------|------------|
 | `PORT` | API | Porta do servidor (predefinido **3001**) |
 | `HOST` | API | Interface onde escuta (predefinido **127.0.0.1**) |
-| `VITE_API_BASE_URL` | Frontend | URL absoluta da API em produção. Em desenvolvimento, deixa **vazio** e o Vite faz proxy de `/api` para a API. |
+| `VITE_API_BASE_URL` | Frontend | Só a **origem** da API (ex. `https://api.teudominio.com`), **sem** `/api` no fim. Se acabar em `/api`, o cliente remove para evitar `/api/api/...`. Em dev, vazio + proxy do Vite. |
 
 Copia `.env.example` para `.env` se quiseres documentar valores locais.
 
