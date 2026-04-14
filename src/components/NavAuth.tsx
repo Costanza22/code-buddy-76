@@ -3,12 +3,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function NavAuth() {
-  const { user, isLoading, logout, isLoggingOut } = useAuth();
+  const { user, logout, isLoggingOut } = useAuth();
 
-  if (isLoading) {
-    return <span className="font-mono text-xs text-muted-foreground px-2">…</span>;
-  }
-
+  // Não esconder "Entrar" enquanto /api/auth/me carrega — senão, se a API falhar,
+  // o utilizador fica só com "…" e parece que o botão sumiu.
   if (user) {
     return (
       <div className="flex items-center gap-2">

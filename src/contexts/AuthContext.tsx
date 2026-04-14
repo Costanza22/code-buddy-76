@@ -4,7 +4,6 @@ import { fetchMe, postLogout, type AuthUser } from "@/lib/api";
 
 type AuthContextValue = {
   user: AuthUser | null;
-  isLoading: boolean;
   logout: () => void;
   isLoggingOut: boolean;
 };
@@ -13,7 +12,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const queryClient = useQueryClient();
-  const { data: user = null, isPending } = useQuery({
+  const { data: user = null } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: fetchMe,
     staleTime: 60_000,
@@ -29,13 +28,12 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const value = useMemo(
     () => ({
       user,
-      isLoading: isPending,
       logout: () => {
         logoutMut.mutate();
       },
       isLoggingOut: logoutMut.isPending,
     }),
-    [user, isPending, logoutMut],
+    [user, logoutMut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
