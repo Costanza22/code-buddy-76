@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import CodeBlock from "@/components/TypewriterCode";
 import { Button } from "@/components/ui/button";
-import { tracks } from "@/data/lessons";
+import { useTracks } from "@/hooks/use-tracks-api";
 
 export default function Index() {
+  const { data: tracks, isPending, isError, error, refetch } = useTracks();
+
   return (
     <div className="min-h-screen">
       {/* Nav */}
@@ -65,10 +67,25 @@ export default function Index() {
               Aulas de 5 min. Escreve direto no navegador. Sem instalar nada, sem desculpa.
             </p>
           </div>
+
+          {isPending && (
+            <p className="font-mono text-sm text-muted-foreground">A carregar trilhas…</p>
+          )}
+          {isError && (
+            <div className="border-2 border-destructive/40 bg-destructive/5 p-4 rounded-sm">
+              <p className="font-mono text-sm text-destructive mb-2">Não foi possível carregar as trilhas.</p>
+              <p className="text-xs text-muted-foreground mb-3">{error instanceof Error ? error.message : "Erro desconhecido"}</p>
+              <p className="text-xs text-muted-foreground mb-3">Confirma que a API está a correr (<code className="font-mono">npm run dev:server</code>) e tenta outra vez.</p>
+              <Button type="button" variant="outline" size="sm" className="font-mono text-xs" onClick={() => refetch()}>
+                Tentar novamente
+              </Button>
+            </div>
+          )}
+          {tracks && (
           <div className="space-y-0">
             {tracks.map((t) => (
               <Link
-                key={t.tag}
+                key={t.id}
                 to={`/trilha/${t.id}`}
                 className="group border-b-2 border-border hover:border-primary/40 py-6 flex items-center gap-6 cursor-pointer transition-colors block"
               >
@@ -82,6 +99,7 @@ export default function Index() {
               </Link>
             ))}
           </div>
+          )}
         </div>
       </section>
 

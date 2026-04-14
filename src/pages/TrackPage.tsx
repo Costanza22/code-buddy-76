@@ -1,17 +1,35 @@
 import { useParams, Link } from "react-router-dom";
-import { getTrack } from "@/data/lessons";
+import { useTrack } from "@/hooks/use-tracks-api";
 import { Button } from "@/components/ui/button";
 
 export default function TrackPage() {
   const { trackId } = useParams();
-  const track = getTrack(trackId || "");
+  const { data: track, isPending, isError, error, refetch } = useTrack(trackId);
 
-  if (!track) {
+  if (isPending) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <p className="font-mono text-sm text-muted-foreground">A carregar trilha…</p>
+      </div>
+    );
+  }
+
+  if (isError || !track) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
           <h1 className="text-2xl font-bold mb-4">Trilha não encontrada</h1>
-          <Link to="/"><Button variant="outline">← Voltar</Button></Link>
+          <p className="text-sm text-muted-foreground mb-4">
+            {isError && error instanceof Error ? error.message : "Não há dados para esta trilha."}
+          </p>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {isError && (
+              <Button type="button" variant="secondary" size="sm" onClick={() => refetch()}>
+                Tentar novamente
+              </Button>
+            )}
+            <Link to="/"><Button variant="outline">← Voltar</Button></Link>
+          </div>
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
 # Code Buddy
 
-Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScript), com **aulas interativas**, editor de código na página e feedback por saída esperada. Interface em React, dados das lições em TypeScript (sem backend neste repositório).
+Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScript), com **aulas interativas**, editor de código no browser e feedback por saída esperada. O **frontend** é React + Vite; o **backend** é uma API Node (Express) que serve trilhas e lições em JSON.
 
 ---
 
@@ -8,120 +8,139 @@ Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScr
 
 | Requisito | Versão / notas |
 |-----------|----------------|
-| **Node.js** | **20 LTS** ou superior (recomendado; compatível com Vite 5 e TypeScript 5.8) |
-| **npm** | Incluído com o Node; use `npm ci` ou `npm install` conforme o fluxo abaixo |
-| **Navegador** | Chrome, Edge, Firefox ou Safari recentes (ES modules + APIs modernas) |
+| **Node.js** | **20 LTS** ou superior |
+| **npm** | Incluído com o Node; na raiz do repo, `npm install` instala frontend e API (workspace `server/`) |
 
-Opcional:
+**Navegador:** Chrome, Edge, Firefox ou Safari recentes.
 
-- **Bun** — existe `bun.lock` no histórico do projeto; o fluxo principal documentado usa **npm** e `package-lock.json`.
+### Variáveis de ambiente (opcional)
 
-Variáveis de ambiente: **não são obrigatórias** para desenvolvimento local; não há API externa configurada no código base das lições.
+| Variável | Onde | Descrição |
+|----------|------|------------|
+| `PORT` | API | Porta do servidor (predefinido **3001**) |
+| `VITE_API_BASE_URL` | Frontend | URL absoluta da API em produção. Em desenvolvimento, deixa **vazio** e o Vite faz proxy de `/api` para a API. |
+
+Copia `.env.example` para `.env` se quiseres documentar valores locais.
 
 ---
 
 ## Como executar
 
-```bash
-# Instalar dependências
-npm install
+### Desenvolvimento (frontend + API)
 
-# Servidor de desenvolvimento (porta padrão do Vite neste projeto: 8080)
+Precisas de **dois terminais** na raiz do repositório:
+
+```bash
+npm install
+```
+
+**Terminal 1 — API**
+
+```bash
+npm run dev:server
+```
+
+**Terminal 2 — interface (Vite, porta 8080)**
+
+```bash
 npm run dev
 ```
 
-Abre `http://localhost:8080` (ou o URL indicado no terminal).
+Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://127.0.0.1:3001` (proxy no `vite.config.ts`).
 
-Outros scripts úteis:
+### Endpoints da API
+
+| Método | Caminho | Descrição |
+|--------|---------|-----------|
+| `GET` | `/api/health` | Estado do serviço |
+| `GET` | `/api/tracks` | Lista de trilhas |
+| `GET` | `/api/tracks/:trackId` | Uma trilha |
+| `GET` | `/api/tracks/:trackId/lessons/:lessonId` | Dados da aula (formato esperado pela `LessonPage`) |
+
+Os dados vêm de `src/data/lessons.ts` (partilhado com a API via import no servidor).
+
+### Outros scripts (frontend)
 
 | Comando | Descrição |
 |---------|-----------|
 | `npm run build` | Build de produção em `dist/` |
-| `npm run preview` | Servir o build localmente |
-| `npm run lint` | ESLint no projeto |
-| `npm test` | Vitest (testes unitários) |
+| `npm run preview` | Pré-visualização do build (proxy `/api` para a API em 3001) |
+| `npm run lint` | ESLint |
+| `npm test` | Vitest |
 
 ---
 
 ## Linguagens e tecnologias
 
-### Linguagens de programação (código-fonte)
+### Linguagens (código deste repositório)
 
-| Linguagem | Uso no projeto |
-|-----------|----------------|
-| **TypeScript** | Toda a aplicação (`*.ts`, `*.tsx`) |
-| **CSS** | Estilos globais e utilitários (`index.css`, Tailwind) |
+| Linguagem | Uso |
+|-----------|-----|
+| **TypeScript** | Frontend (`src/`) e API (`server/src/`) |
+| **CSS** | Estilos globais e Tailwind |
 
-### Conteúdo pedagógico (trilhas)
+### Conteúdo das trilhas
 
-As lições no ficheiro `src/data/lessons.ts` ensinam principalmente **Python** e **JavaScript** (exemplos e templates de código nos exercícios).
+As lições em `src/data/lessons.ts` focam **Python** e **JavaScript** nos exemplos.
 
-### Stack principal
+### Stack
 
 | Tecnologia | Função |
 |------------|--------|
-| **React 18** | UI e componentes |
-| **Vite 5** | Dev server e bundler |
-| **React Router 6** | Rotas (`/`, `/trilha/:trackId`, `/trilha/:trackId/aula/:lessonId`) |
-| **Tailwind CSS 3** | Estilização utilitária |
-| **shadcn/ui** (Radix) | Componentes acessíveis em `src/components/ui/` |
-| **Framer Motion** | Animações (ex.: componente de código na landing) |
-| **TanStack Query** | Cliente de dados/cache (preparado para evoluções) |
-| **Zod** + **React Hook Form** | Formulários e validação (onde aplicável) |
-| **Vitest** + **Testing Library** | Testes |
+| **React 18** | UI |
+| **Vite 5** | Dev server, build e proxy `/api` |
+| **Express 4** | API REST |
+| **React Router 6** | Rotas da SPA |
+| **Tailwind CSS 3** + **shadcn/ui** (Radix) | Estilos e componentes |
+| **TanStack Query** | Pedidos à API e cache |
+| **Framer Motion** | Animações |
+| **tsx** | Executar TypeScript da API em desenvolvimento |
 
 ---
 
-## Diagrama (visão de arquitetura)
-
-Fluxo lógico da aplicação no browser: SPA estática, dados em módulo TypeScript.
+## Diagrama (arquitetura)
 
 ```mermaid
-flowchart TB
+flowchart LR
   subgraph browser["Navegador"]
-    subgraph vite["Vite"]
-      entry["main.tsx"]
-    end
-    entry --> App["App.tsx"]
-    App --> RQ["QueryClientProvider"]
-    RQ --> Router["BrowserRouter + Routes"]
-    Router --> PIndex["Index.tsx\n(landing)"]
-    Router --> PTrack["TrackPage.tsx\n(lista de aulas)"]
-    Router --> PLesson["LessonPage.tsx\n(editor + conteúdo)"]
-    Router --> P404["NotFound.tsx"]
-    PLesson --> Data["lessons.ts\ntracks + lições"]
-    PTrack --> Data
-    PIndex --> UI["Componentes UI\nshadcn + TypewriterCode"]
+    SPA["React SPA\n(Vite)"]
   end
+  subgraph api["Node"]
+    EX["Express\nserver/src"]
+  end
+  DATA["src/data/lessons.ts"]
+  SPA -->|"GET /api/*\n(dev: proxy)"| EX
+  EX --> DATA
 ```
 
-Resumo:
+Fluxo resumido:
 
-- **Sem servidor de API** neste repo: trilhas e lições vêm de **`src/data/lessons.ts`**.
-- **Rotas** concentram-se em `App.tsx`; páginas em `src/pages/`.
-- **Design system** em `src/components/ui/` (Radix + Tailwind).
+1. A SPA pede trilhas/aulas via **`fetch('/api/...')`** (ou `VITE_API_BASE_URL` + `/api/...` em produção).
+2. A **API** lê os dados em **`lessons.ts`** e devolve JSON.
+3. **Rotas** da app: `App.tsx`; páginas em `src/pages/`.
 
 ---
 
 ## Estrutura de pastas (resumo)
 
 ```
+server/
+  src/index.ts      # Express: rotas /api
 src/
-  App.tsx           # Rotas e providers globais
-  main.tsx          # Entrada React
-  pages/            # Index, TrackPage, LessonPage, NotFound
-  data/lessons.ts   # Dados das trilhas e lições
-  components/       # UI partilhada + TypewriterCode, NavLink
-  components/ui/  # shadcn / Radix
-  hooks/            # Hooks reutilizáveis
-  lib/utils.ts      # Utilitários (ex.: cn)
+  App.tsx
+  main.tsx
+  lib/api.ts        # Cliente HTTP da SPA
+  hooks/use-tracks-api.ts
+  data/lessons.ts   # Fonte de dados (API importa daqui)
+  pages/
+  components/
 ```
 
 ---
 
-## Licença e origem
+## Licença
 
-Projeto desenvolvido com apoio de ferramentas de geração de UI (ex.: Lovable); o código é teu para evoluir, testar e publicar conforme a tua licença escolhida (este repositório não define `LICENSE` por defeito — podes adicionar uma).
+Este projeto está licenciado nos termos da **MIT License** — vê o ficheiro [`LICENSE`](./LICENSE).
 
 ---
 

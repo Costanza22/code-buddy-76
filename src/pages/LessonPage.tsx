@@ -1,22 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getLesson } from "@/data/lessons";
+import { useLesson } from "@/hooks/use-tracks-api";
 import { Button } from "@/components/ui/button";
 
 export default function LessonPage() {
   const { trackId, lessonId } = useParams();
-  const data = getLesson(trackId || "", lessonId || "");
-  const [code, setCode] = useState(data?.lesson.codeTemplate || "");
+  const { data, isPending, isError, error, refetch } = useLesson(trackId, lessonId);
+  const [code, setCode] = useState("");
   const [output, setOutput] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  if (!data) {
+  useEffect(() => {
+    if (!data) return;
+    setCode(data.lesson.codeTemplate);
+    setOutput(null);
+    setShowHint(false);
+    setCompleted(false);
+  }, [data]);
+
+  if (isPending) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <p className="font-mono text-sm text-muted-foreground">A carregar aula…</p>
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
           <h1 className="text-2xl font-bold mb-4">Aula não encontrada</h1>
-          <Link to="/"><Button variant="outline">← Voltar</Button></Link>
+          <p className="text-sm text-muted-foreground mb-4">
+            {isError && error instanceof Error ? error.message : "Não há dados para esta aula."}
+          </p>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {isError && (
+              <Button type="button" variant="secondary" size="sm" onClick={() => refetch()}>
+                Tentar novamente
+              </Button>
+            )}
+            <Link to="/"><Button variant="outline">← Voltar</Button></Link>
+          </div>
         </div>
       </div>
     );
@@ -25,12 +51,10 @@ export default function LessonPage() {
   const { lesson, track, index, next } = data;
 
   const handleRun = () => {
-    // Simple simulated output
     try {
       const lines: string[] = [];
       const mockPrint = (...args: unknown[]) => lines.push(args.map(String).join(" "));
 
-      // Very basic Python-like simulation for print statements
       const printRegex = /print\s*\(\s*(?:"([^"]*)"|'([^']*)'|f"([^"]*)"|(.*?))\s*\)/g;
       let match;
       let hasOutput = false;
@@ -38,7 +62,6 @@ export default function LessonPage() {
       while ((match = printRegex.exec(code)) !== null) {
         hasOutput = true;
         const value = match[1] ?? match[2] ?? match[3] ?? match[4] ?? "";
-        // Simple f-string variable replacement
         const processed = value.replace(/\{(\w+)\}/g, (_: string, varName: string) => {
           const varMatch = code.match(new RegExp(`${varName}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|(\\d+))`));
           if (varMatch) return varMatch[1] ?? varMatch[2] ?? varMatch[3] ?? varName;
@@ -47,7 +70,6 @@ export default function LessonPage() {
         mockPrint(processed);
       }
 
-      // JS-style console.log
       const consoleRegex = /console\.log\s*\(\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`|(.*?))\s*\)/g;
       while ((match = consoleRegex.exec(code)) !== null) {
         hasOutput = true;
@@ -55,7 +77,6 @@ export default function LessonPage() {
       }
 
       if (!hasOutput) {
-        // Try evaluating simple expressions
         const cleanCode = code.replace(/#.*$/gm, "").replace(/\/\/.*$/gm, "").trim();
         if (cleanCode) {
           try {
@@ -102,7 +123,6 @@ export default function LessonPage() {
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">{lesson.title}</h1>
           </div>
 
-          {/* Lesson content */}
           <div className="space-y-4 mb-10">
             {lesson.content.map((paragraph, i) => (
               <p key={i} className="text-secondary-foreground leading-relaxed">
@@ -111,13 +131,13 @@ export default function LessonPage() {
             ))}
           </div>
 
-          {/* Code editor */}
           <div className="border-2 border-border">
             <div className="border-b-2 border-border px-4 py-2.5 flex items-center justify-between">
               <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Editor</span>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setShowHint(h => !h)}
+                  type="button"
+                  onClick={() => setShowHint((h) => !h)}
                   className="font-mono text-xs text-muted-foreground hover:text-accent transition-colors uppercase tracking-wider"
                 >
                   {showHint ? "esconder dica" : "dica"}
@@ -131,7 +151,7 @@ export default function LessonPage() {
               spellCheck={false}
             />
             <div className="border-t-2 border-border px-4 py-3 flex items-center justify-between">
-              <Button onClick={handleRun} size="sm" className="font-mono uppercase tracking-wider text-xs">
+              <Button type="button" onClick={handleRun} size="sm" className="font-mono uppercase tracking-wider text-xs">
                 Rodar ▶
               </Button>
               {completed && (
@@ -142,7 +162,6 @@ export default function LessonPage() {
             </div>
           </div>
 
-          {/* Hint */}
           {showHint && (
             <div className="mt-4 border-2 border-accent/30 bg-accent/5 p-4">
               <span className="font-mono text-xs text-accent uppercase tracking-wider font-bold block mb-2">Dica</span>
@@ -150,7 +169,6 @@ export default function LessonPage() {
             </div>
           )}
 
-          {/* Output */}
           {output !== null && (
             <div className="mt-4 border-2 border-border bg-card p-4">
               <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider block mb-2">Saída</span>
@@ -158,7 +176,6 @@ export default function LessonPage() {
             </div>
           )}
 
-          {/* Navigation */}
           <div className="mt-12 flex items-center justify-between border-t-2 border-border pt-6">
             {index > 0 ? (
               <Link to={`/trilha/${track.id}/aula/${data.prev!.id}`}>
