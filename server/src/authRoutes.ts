@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { Express } from "express";
 import bcrypt from "bcryptjs";
-import { readUsers, writeUsers, type StoredUser } from "./usersStore.ts";
+import { readUsers, writeUsers, type StoredUser } from "./usersStore.js";
 
 const emailOk = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 

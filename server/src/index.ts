@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
-import type { Track } from "../../src/data/lessons.ts";
-import { registerAuthRoutes } from "./authRoutes.ts";
+import type { Track } from "./tracksTypes.js";
+import { registerAuthRoutes } from "./authRoutes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const tracksPath = join(__dirname, "../data/tracks.json");
