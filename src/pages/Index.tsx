@@ -23,27 +23,27 @@ export default function Index() {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-start">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
-                Plataforma gratuita · Em português · Sem enrolação
+                De graça · Em português · Vai no seu ritmo
               </p>
               <h1 className="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-6">
-                Aprenda a<br />
-                programar<br />
-                <span className="highlight-box -rotate-1 inline-block mt-1">de verdade.</span>
+                Você não<br />
+                precisa de<br />
+                <span className="highlight-box -rotate-1 inline-block mt-1">curso caro.</span>
               </h1>
               <p className="text-lg text-muted-foreground max-w-sm mb-8 leading-relaxed">
-                Nada de vídeo de 4 horas. Aqui você escreve código desde o minuto zero, erra, corrige, e aprende fazendo.
+                Abre o editor, escreve código, roda, dá erro, corrige. Repetir até virar dev. É isso.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/trilha/python">
                   <Button size="lg" className="font-mono uppercase tracking-wider text-sm">
-                    Começar agora →
+                    Bora começar →
                   </Button>
                 </Link>
               </div>
               <div className="flex gap-8 mt-10 font-mono text-sm">
-                <div><span className="text-2xl font-bold text-foreground block">12k</span><span className="text-muted-foreground text-xs">alunos</span></div>
-                <div><span className="text-2xl font-bold text-foreground block">104</span><span className="text-muted-foreground text-xs">aulas</span></div>
-                <div><span className="text-2xl font-bold text-foreground block">4.9★</span><span className="text-muted-foreground text-xs">avaliação</span></div>
+                <div><span className="text-2xl font-bold text-foreground block">12k</span><span className="text-muted-foreground text-xs">já tentaram</span></div>
+                <div><span className="text-2xl font-bold text-foreground block">104</span><span className="text-muted-foreground text-xs">aulas curtas</span></div>
+                <div><span className="text-2xl font-bold text-foreground block">4.9★</span><span className="text-muted-foreground text-xs">nota real</span></div>
               </div>
             </div>
             <div className="lg:mt-12">
@@ -59,10 +59,10 @@ export default function Index() {
           <div className="flex items-end justify-between mb-12">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Trilhas</p>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Escolha por<br />onde começar.</h2>
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Pega uma<br />e vai.</h2>
             </div>
             <p className="text-muted-foreground text-sm max-w-xs text-right hidden md:block">
-              Cada trilha tem aulas curtas de 5 min, exercícios no navegador e projetos pra montar seu portfólio.
+              Aulas de 5 min. Escreve direto no navegador. Sem instalar nada, sem desculpa.
             </p>
           </div>
           <div className="space-y-0">
@@ -88,13 +88,13 @@ export default function Index() {
       {/* Como funciona */}
       <section className="py-20 px-4 border-t-2 border-border">
         <div className="container">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Método</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-16">Sem teoria chata.<br />Só prática.</h2>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Como rola</p>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-16">Lê pouco.<br />Escreve muito.</h2>
           <div className="grid md:grid-cols-3 gap-12">
             {[
-              { step: "01", title: "Leia o conceito", desc: "Explicações curtas, diretas, com exemplos de código reais. Sem jargão desnecessário." },
-              { step: "02", title: "Escreva código", desc: "Editor no navegador. Escreva, rode, veja o resultado. Erre à vontade — é assim que funciona." },
-              { step: "03", title: "Construa algo", desc: "Cada módulo termina com um mini-projeto. Algo que você pode mostrar pra alguém." },
+              { step: "01", title: "Leia o mínimo", desc: "Uma explicação curta, um exemplo. Só o que você precisa pra entender e seguir em frente." },
+              { step: "02", title: "Escreva e rode", desc: "Editor aqui mesmo. Escreveu, apertou play, viu o resultado. Deu erro? Normal. Tenta de novo." },
+              { step: "03", title: "Monte algo real", desc: "No final de cada módulo você sai com um projetinho. Pequeno, mas seu." },
             ].map((item) => (
               <div key={item.step}>
                 <span className="font-mono text-5xl font-bold text-muted block mb-3">{item.step}</span>
@@ -110,12 +110,12 @@ export default function Index() {
       <section className="py-20 px-4 border-t-2 border-border">
         <div className="container max-w-2xl text-center">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            A pior linha de código é a que você nunca escreveu.
+            Para de ler sobre programação e vai programar.
           </h2>
-          <p className="text-muted-foreground mb-8">Começa agora. Leva 2 minutos. Sério.</p>
+          <p className="text-muted-foreground mb-8">2 minutos. Sem cadastro. Sem cartão.</p>
           <Link to="/trilha/python">
             <Button size="lg" className="font-mono uppercase tracking-wider text-sm">
-              Primeira aula grátis →
+              Primeira aula →
             </Button>
           </Link>
         </div>
@@ -125,7 +125,7 @@ export default function Index() {
       <footer className="border-t-2 border-border py-6 px-4">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-muted-foreground">
           <span className="font-bold text-foreground">codestart_</span>
-          <span>feito por quem já foi iniciante também</span>
+          <span>feito por quem já debugou chorando</span>
         </div>
       </footer>
     </div>
