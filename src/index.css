@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 60 5% 96%;
-    --foreground: 240 10% 8%;
+    --background: 220 15% 8%;
+    --foreground: 60 5% 90%;
 
-    --card: 60 5% 93%;
-    --card-foreground: 240 10% 8%;
+    --card: 220 14% 12%;
+    --card-foreground: 60 5% 90%;
 
-    --popover: 60 5% 93%;
-    --popover-foreground: 240 10% 8%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 60 5% 90%;
 
-    --primary: 150 90% 38%;
-    --primary-foreground: 60 5% 96%;
+    --primary: 150 85% 42%;
+    --primary-foreground: 220 15% 8%;
 
-    --secondary: 240 8% 12%;
-    --secondary-foreground: 60 5% 96%;
+    --secondary: 220 12% 18%;
+    --secondary-foreground: 60 5% 85%;
 
-    --muted: 60 3% 88%;
-    --muted-foreground: 240 5% 45%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 220 8% 50%;
 
     --accent: 30 100% 55%;
-    --accent-foreground: 240 10% 8%;
+    --accent-foreground: 220 15% 8%;
 
     --destructive: 0 72% 55%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 60 5% 96%;
 
-    --border: 240 5% 82%;
-    --input: 240 5% 82%;
-    --ring: 150 90% 38%;
+    --border: 220 10% 20%;
+    --input: 220 10% 20%;
+    --ring: 150 85% 42%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 60 5% 93%;
-    --sidebar-foreground: 240 10% 8%;
-    --sidebar-primary: 150 90% 38%;
-    --sidebar-primary-foreground: 60 5% 96%;
-    --sidebar-accent: 60 3% 88%;
-    --sidebar-accent-foreground: 240 10% 8%;
-    --sidebar-border: 240 5% 82%;
-    --sidebar-ring: 150 90% 38%;
+    --sidebar-background: 220 14% 12%;
+    --sidebar-foreground: 60 5% 90%;
+    --sidebar-primary: 150 85% 42%;
+    --sidebar-primary-foreground: 220 15% 8%;
+    --sidebar-accent: 220 12% 18%;
+    --sidebar-accent-foreground: 60 5% 85%;
+    --sidebar-border: 220 10% 20%;
+    --sidebar-ring: 150 85% 42%;
   }
 }
 
@@ -62,6 +62,6 @@
     font-family: 'Space Mono', monospace;
   }
   .highlight-box {
-    @apply bg-secondary text-secondary-foreground px-2 py-0.5 inline-block;
+    @apply bg-primary text-primary-foreground px-2 py-0.5 inline-block;
   }
 }
