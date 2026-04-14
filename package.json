@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "dev:server": "npm run dev -w code-buddy-server",
+    "export-tracks": "node --import tsx scripts/export-tracks.mjs",
+    "dev:server": "npm run export-tracks && npm run dev -w code-buddy-server",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

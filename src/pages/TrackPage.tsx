@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { NavAuth } from "@/components/NavAuth";
 import { useTrack } from "@/hooks/use-tracks-api";
 import { Button } from "@/components/ui/button";
 
@@ -38,8 +39,9 @@ export default function TrackPage() {
   return (
     <div className="min-h-screen">
       <nav className="fixed top-0 w-full z-50 bg-background border-b-2 border-border">
-        <div className="container flex items-center justify-between h-14">
+        <div className="container flex items-center justify-between h-14 gap-3">
           <Link to="/" className="font-mono font-bold text-lg tracking-tight hover:text-primary transition-colors">codestart_</Link>
+          <NavAuth />
         </div>
       </nav>
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import CodeBlock from "@/components/TypewriterCode";
 import { Button } from "@/components/ui/button";
+import { NavAuth } from "@/components/NavAuth";
 import { useTracks } from "@/hooks/use-tracks-api";
 
 export default function Index() {
@@ -12,9 +13,9 @@ export default function Index() {
       <nav className="fixed top-0 w-full z-50 bg-background border-b-2 border-border">
         <div className="container flex items-center justify-between h-14">
           <span className="font-mono font-bold text-lg tracking-tight">codestart_</span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <a href="#trilhas"><Button variant="ghost" size="sm" className="font-mono text-xs uppercase tracking-wider">Trilhas</Button></a>
-            <Button size="sm" className="font-mono text-xs uppercase tracking-wider">Entrar</Button>
+            <NavAuth />
           </div>
         </div>
       </nav>
@@ -143,7 +144,6 @@ export default function Index() {
       <footer className="border-t-2 border-border py-6 px-4">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-muted-foreground">
           <span className="font-bold text-foreground">codestart_</span>
-          <span>feito por quem já debugou chorando</span>
         </div>
       </footer>
     </div>

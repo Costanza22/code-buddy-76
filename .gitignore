@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Contas locais (não commitar utilizadores reais)
+server/data/users.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

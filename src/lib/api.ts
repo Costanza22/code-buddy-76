@@ -2,21 +2,72 @@ import type { Lesson, Track } from "@/data/lessons";
 
 const base = () => (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 
+const cred: RequestInit = { credentials: "include" };
+
 async function parseJson<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || res.statusText || `HTTP ${res.status}`);
+    let msg = text.slice(0, 280) || res.statusText || `HTTP ${res.status}`;
+    const t = text.trim();
+    if (t.startsWith("{")) {
+      try {
+        const j = JSON.parse(t) as { error?: string };
+        if (typeof j?.error === "string") msg = j.error;
+      } catch {
+        /* texto não é JSON válido */
+      }
+    }
+    throw new Error(msg);
   }
   return res.json() as Promise<T>;
 }
 
+export type AuthUser = {
+  id: string;
+  email: string;
+  name: string;
+};
+
+export async function fetchMe(): Promise<AuthUser | null> {
+  const res = await fetch(`${base()}/api/auth/me`, cred);
+  const j = await parseJson<{ user: AuthUser | null }>(res);
+  return j.user;
+}
+
+export async function postLogin(email: string, password: string): Promise<AuthUser> {
+  const res = await fetch(`${base()}/api/auth/login`, {
+    ...cred,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const j = await parseJson<{ user: AuthUser }>(res);
+  return j.user;
+}
+
+export async function postRegister(email: string, password: string, name?: string): Promise<AuthUser> {
+  const res = await fetch(`${base()}/api/auth/register`, {
+    ...cred,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, name: name || undefined }),
+  });
+  const j = await parseJson<{ user: AuthUser }>(res);
+  return j.user;
+}
+
+export async function postLogout(): Promise<void> {
+  const res = await fetch(`${base()}/api/auth/logout`, { ...cred, method: "POST" });
+  await parseJson<{ ok: boolean }>(res);
+}
+
 export async function fetchTracks(): Promise<Track[]> {
-  const res = await fetch(`${base()}/api/tracks`);
+  const res = await fetch(`${base()}/api/tracks`, cred);
   return parseJson<Track[]>(res);
 }
 
 export async function fetchTrack(trackId: string): Promise<Track> {
-  const res = await fetch(`${base()}/api/tracks/${encodeURIComponent(trackId)}`);
+  const res = await fetch(`${base()}/api/tracks/${encodeURIComponent(trackId)}`, cred);
   return parseJson<Track>(res);
 }
 
@@ -31,6 +82,7 @@ export type LessonPayload = {
 export async function fetchLesson(trackId: string, lessonId: string): Promise<LessonPayload> {
   const res = await fetch(
     `${base()}/api/tracks/${encodeURIComponent(trackId)}/lessons/${encodeURIComponent(lessonId)}`,
+    cred,
   );
   return parseJson<LessonPayload>(res);
 }

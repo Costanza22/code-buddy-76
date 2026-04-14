@@ -18,6 +18,7 @@ Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScr
 | Variável | Onde | Descrição |
 |----------|------|------------|
 | `PORT` | API | Porta do servidor (predefinido **3001**) |
+| `HOST` | API | Interface onde escuta (predefinido **127.0.0.1**) |
 | `VITE_API_BASE_URL` | Frontend | URL absoluta da API em produção. Em desenvolvimento, deixa **vazio** e o Vite faz proxy de `/api` para a API. |
 
 Copia `.env.example` para `.env` se quiseres documentar valores locais.
@@ -40,6 +41,8 @@ npm install
 npm run dev:server
 ```
 
+(Isto corre `npm run export-tracks` antes de subir o Express: gera `server/data/tracks.json` a partir de `src/data/lessons.ts`. Se editares as lições, volta a arrancar a API ou corre `npm run export-tracks` manualmente.)
+
 **Terminal 2 — interface (Vite, porta 8080)**
 
 ```bash
@@ -56,8 +59,14 @@ Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://1
 | `GET` | `/api/tracks` | Lista de trilhas |
 | `GET` | `/api/tracks/:trackId` | Uma trilha |
 | `GET` | `/api/tracks/:trackId/lessons/:lessonId` | Dados da aula (formato esperado pela `LessonPage`) |
+| `GET` | `/api/auth/me` | Utilizador da sessão (`{ user }` ou `user: null`) |
+| `POST` | `/api/auth/register` | Corpo: `{ email, password, name? }` — cria conta e inicia sessão |
+| `POST` | `/api/auth/login` | Corpo: `{ email, password }` |
+| `POST` | `/api/auth/logout` | Termina sessão (cookie HTTP-only) |
 
-Os dados vêm de `src/data/lessons.ts` (partilhado com a API via import no servidor).
+Contas ficam em `server/data/users.json` (gerado localmente; não commitar dados reais — está no `.gitignore`). Em produção define `SESSION_SECRET` forte.
+
+Os dados vêm de `src/data/lessons.ts`; a API serve uma cópia em JSON (`server/data/tracks.json`), gerada pelo script `npm run export-tracks`.
 
 ### Outros scripts (frontend)
 
@@ -108,7 +117,7 @@ flowchart LR
   subgraph api["Node"]
     EX["Express\nserver/src"]
   end
-  DATA["src/data/lessons.ts"]
+  DATA["server/data/tracks.json\n(export de lessons.ts)"]
   SPA -->|"GET /api/*\n(dev: proxy)"| EX
   EX --> DATA
 ```
@@ -116,7 +125,7 @@ flowchart LR
 Fluxo resumido:
 
 1. A SPA pede trilhas/aulas via **`fetch('/api/...')`** (ou `VITE_API_BASE_URL` + `/api/...` em produção).
-2. A **API** lê os dados em **`lessons.ts`** e devolve JSON.
+2. A **API** lê **`server/data/tracks.json`** (gerado a partir de **`src/data/lessons.ts`**) e devolve JSON.
 3. **Rotas** da app: `App.tsx`; páginas em `src/pages/`.
 
 ---
