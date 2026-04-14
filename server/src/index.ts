@@ -38,7 +38,8 @@ function getLesson(trackId: string, lessonId: string) {
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
-const HOST = process.env.HOST ?? "127.0.0.1";
+/** localhost costuma alinhar melhor com o proxy do Vite no Windows. */
+const HOST = process.env.HOST ?? "localhost";
 
 app.use(
   cors({
@@ -63,7 +64,6 @@ app.use(
 );
 
 registerAuthRoutes(app);
-console.log("[api] rotas de sessão: GET/POST /api/auth/me | /register | /login | /logout");
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "code-buddy-api", auth: true });
@@ -112,4 +112,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 
 app.listen(PORT, HOST, () => {
   console.log(`API em http://${HOST}:${PORT}`);
+  console.log(
+    "[api] sessão: GET /api/auth/me | POST /api/auth/register | POST /api/auth/login | POST /api/auth/logout",
+  );
 });

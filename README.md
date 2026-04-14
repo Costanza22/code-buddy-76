@@ -18,7 +18,7 @@ Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScr
 | Variável | Onde | Descrição |
 |----------|------|------------|
 | `PORT` | API | Porta do servidor (predefinido **3001**) |
-| `HOST` | API | Interface onde escuta (predefinido **127.0.0.1**) |
+| `HOST` | API | Interface onde escuta (predefinido **localhost**, alinhado com o proxy do Vite) |
 | `VITE_API_BASE_URL` | Frontend | Só a **origem** da API (ex. `https://api.teudominio.com`), **sem** `/api` no fim. Se acabar em `/api`, o cliente remove para evitar `/api/api/...`. Em dev, vazio + proxy do Vite. |
 
 Copia `.env.example` para `.env` se quiseres documentar valores locais.
@@ -49,7 +49,7 @@ npm run dev:server
 npm run dev
 ```
 
-Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://127.0.0.1:3001` (proxy no `vite.config.ts`).
+Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://localhost:3001` (proxy no `vite.config.ts`).
 
 ### Endpoints da API
 
