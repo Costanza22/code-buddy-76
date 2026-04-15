@@ -135,7 +135,9 @@ export default function LessonPage() {
 
           <div className="border-2 border-border">
             <div className="border-b-2 border-border px-4 py-2.5 flex items-center justify-between">
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Editor</span>
+              <label htmlFor="lesson-code-editor" className="font-mono text-xs uppercase tracking-wider text-muted-foreground cursor-pointer">
+                Editor
+              </label>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -147,10 +149,13 @@ export default function LessonPage() {
               </div>
             </div>
             <textarea
+              id="lesson-code-editor"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className="w-full bg-background font-mono text-sm p-5 min-h-[200px] resize-y focus:outline-none text-foreground placeholder:text-muted-foreground"
               spellCheck={false}
+              aria-label="Editor de código da aula"
+              placeholder="Escreve o teu código aqui…"
             />
             <div className="border-t-2 border-border px-4 py-3 flex items-center justify-between">
               <Button type="button" onClick={handleRun} size="sm" className="font-mono uppercase tracking-wider text-xs">
@@ -179,8 +184,8 @@ export default function LessonPage() {
           )}
 
           <div className="mt-12 flex items-center justify-between border-t-2 border-border pt-6">
-            {index > 0 ? (
-              <Link to={`/trilha/${track.id}/aula/${data.prev!.id}`}>
+            {index > 0 && data.prev ? (
+              <Link to={`/trilha/${track.id}/aula/${data.prev.id}`}>
                 <Button variant="outline" className="font-mono text-xs uppercase tracking-wider">
                   ← Anterior
                 </Button>
