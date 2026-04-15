@@ -19,11 +19,11 @@ export default function Index() {
         </div>
       </nav>
 
-      {/* Hero — texto + bug lado a lado desde sm; min-w-0 evita a grelha/flex rebentar a largura */}
+      {/* Hero — texto à esquerda; bug centrado na área livre à direita (flex-1 + justify-center) */}
       <section className="pt-28 pb-16 px-4 overflow-x-clip">
         <div className="container">
-          <div className="flex w-full min-w-0 flex-col items-stretch gap-8 sm:flex-row sm:items-center sm:justify-start sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12">
-            <div className="min-w-0 shrink sm:max-w-[min(100%,22rem)] md:max-w-[min(100%,26rem)] lg:max-w-[min(100%,30rem)] xl:max-w-[34rem]">
+          <div className="flex w-full min-w-0 flex-col items-stretch gap-8 sm:flex-row sm:items-center sm:gap-6 md:gap-8 lg:gap-10">
+            <div className="min-w-0 shrink-0 sm:max-w-[min(100%,22rem)] md:max-w-[min(100%,26rem)] lg:max-w-[min(100%,30rem)] xl:max-w-[34rem]">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 Plataforma para iniciantes
               </p>
@@ -40,7 +40,7 @@ export default function Index() {
                 </Link>
               </div>
             </div>
-            <div className="flex min-w-0 shrink-0 justify-center sm:justify-start sm:-translate-x-1 md:-translate-x-2">
+            <div className="flex min-w-0 flex-1 items-center justify-center py-2 sm:min-h-[min(18rem,40vh)]">
               <img
                 src="/bug.png"
                 alt=""
