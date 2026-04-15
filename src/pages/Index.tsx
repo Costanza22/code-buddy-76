@@ -19,15 +19,15 @@ export default function Index() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="pt-28 pb-16 px-4">
+      {/* Hero — texto + bug lado a lado desde sm; min-w-0 evita a grelha/flex rebentar a largura */}
+      <section className="pt-28 pb-16 px-4 overflow-x-clip">
         <div className="container">
-          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-10 lg:gap-14 xl:gap-20 items-center">
-            <div>
+          <div className="flex w-full min-w-0 flex-col items-stretch gap-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16">
+            <div className="min-w-0 shrink sm:max-w-[min(100%,22rem)] md:max-w-[min(100%,26rem)] lg:max-w-[min(100%,30rem)] xl:max-w-[34rem]">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 Plataforma para iniciantes
               </p>
-              <h1 className="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-8">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.95] tracking-tight mb-8">
                 Você não<br />
                 precisa de<br />
                 <span className="highlight-box -rotate-1 inline-block mt-1">curso caro.</span>
@@ -40,14 +40,15 @@ export default function Index() {
                 </Link>
               </div>
             </div>
-            <div className="flex justify-center lg:justify-end w-full min-h-0 -mx-2 sm:mx-0">
+            <div className="flex min-w-0 flex-1 justify-center sm:justify-end sm:pl-2 md:pl-4 lg:pl-6">
               <img
                 src="/bug.png"
                 alt=""
-                width={720}
-                height={720}
+                width={800}
+                height={800}
                 decoding="async"
-                className="w-[min(100%,28rem)] sm:w-[min(100%,32rem)] lg:w-[min(100%,36rem)] xl:w-[min(100%,42rem)] h-auto max-h-[min(70vh,36rem)] object-contain object-bottom select-none pointer-events-none"
+                draggable={false}
+                className="block h-auto w-full max-w-[15rem] object-contain object-center select-none pointer-events-none sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
               />
             </div>
           </div>
