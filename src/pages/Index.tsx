@@ -44,11 +44,11 @@ export default function Index() {
               <img
                 src="/bug.png"
                 alt=""
-                width={800}
-                height={800}
+                width={400}
+                height={400}
                 decoding="async"
                 draggable={false}
-                className="block h-auto w-full max-w-[15rem] object-contain object-center select-none pointer-events-none sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
+                className="block h-auto w-full max-w-[10rem] object-contain object-center select-none pointer-events-none sm:max-w-[11rem] md:max-w-[12rem] lg:max-w-52 xl:max-w-56 2xl:max-w-60"
               />
             </div>
           </div>
