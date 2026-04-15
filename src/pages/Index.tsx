@@ -22,7 +22,7 @@ export default function Index() {
       {/* Hero — texto + bug lado a lado desde sm; min-w-0 evita a grelha/flex rebentar a largura */}
       <section className="pt-28 pb-16 px-4 overflow-x-clip">
         <div className="container">
-          <div className="flex w-full min-w-0 flex-col items-stretch gap-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16">
+          <div className="flex w-full min-w-0 flex-col items-stretch gap-8 sm:flex-row sm:items-center sm:justify-start sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12">
             <div className="min-w-0 shrink sm:max-w-[min(100%,22rem)] md:max-w-[min(100%,26rem)] lg:max-w-[min(100%,30rem)] xl:max-w-[34rem]">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 Plataforma para iniciantes
@@ -40,7 +40,7 @@ export default function Index() {
                 </Link>
               </div>
             </div>
-            <div className="flex min-w-0 flex-1 justify-center sm:justify-end sm:pl-2 md:pl-4 lg:pl-6">
+            <div className="flex min-w-0 shrink-0 justify-center sm:justify-start sm:-translate-x-1 md:-translate-x-2">
               <img
                 src="/bug.png"
                 alt=""
