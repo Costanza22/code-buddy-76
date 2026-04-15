@@ -125,10 +125,9 @@ export default function Index() {
       {/* CTA */}
       <section className="py-20 px-4 border-t-2 border-border">
         <div className="container max-w-2xl text-center">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-8">
             Para de ler sobre programação e vai programar.
           </h2>
-          <p className="text-muted-foreground mb-8">2 minutos. Sem cadastro. Sem cartão.</p>
           <Link to="/trilha/python">
             <Button size="lg" className="font-mono uppercase tracking-wider text-sm">
               Primeira aula →
