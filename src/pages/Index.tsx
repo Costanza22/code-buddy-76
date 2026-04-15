@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import CodeBlock from "@/components/TypewriterCode";
 import { Button } from "@/components/ui/button";
 import { NavAuth } from "@/components/NavAuth";
 import { useTracks } from "@/hooks/use-tracks-api";
@@ -23,7 +22,7 @@ export default function Index() {
       {/* Hero */}
       <section className="pt-28 pb-16 px-4">
         <div className="container">
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-start">
+          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-10 lg:gap-14 xl:gap-20 items-center">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
                 Plataforma para iniciantes
@@ -40,14 +39,16 @@ export default function Index() {
                   </Button>
                 </Link>
               </div>
-              <div className="flex gap-8 mt-10 font-mono text-sm">
-                <div><span className="text-2xl font-bold text-foreground block">12k</span><span className="text-muted-foreground text-xs">já tentaram</span></div>
-                <div><span className="text-2xl font-bold text-foreground block">104</span><span className="text-muted-foreground text-xs">aulas curtas</span></div>
-                <div><span className="text-2xl font-bold text-foreground block">4.9★</span><span className="text-muted-foreground text-xs">nota real</span></div>
-              </div>
             </div>
-            <div className="lg:mt-12">
-              <CodeBlock />
+            <div className="flex justify-center lg:justify-end w-full min-h-0 -mx-2 sm:mx-0">
+              <img
+                src="/bug.png"
+                alt=""
+                width={720}
+                height={720}
+                decoding="async"
+                className="w-[min(100%,28rem)] sm:w-[min(100%,32rem)] lg:w-[min(100%,36rem)] xl:w-[min(100%,42rem)] h-auto max-h-[min(70vh,36rem)] object-contain object-bottom select-none pointer-events-none"
+              />
             </div>
           </div>
         </div>
