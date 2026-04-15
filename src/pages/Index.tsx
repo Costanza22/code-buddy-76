@@ -33,8 +33,8 @@ export default function Index() {
                 precisa de<br />
                 <span className="highlight-box -rotate-1 inline-block mt-1">curso caro.</span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-sm mb-8 leading-relaxed">
-                Abre o editor, escreve código, roda, dá erro, corrige. Repetir até virar dev. É isso.
+              <p className="text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
+                Trilhas com enunciado curto — editor no browser, corres até a saída bater certo com o exercício. Sem instalar IDE nem SDK.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/trilha/python">

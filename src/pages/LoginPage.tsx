@@ -61,7 +61,7 @@ export default function LoginPage() {
           <div>
             <CardTitle className="text-2xl font-bold tracking-tight">Entrar</CardTitle>
             <CardDescription className="font-mono text-xs mt-2">
-              Usa a tua conta para continuar as trilhas.
+              Mesmo sítio, mesmo progresso — voltas às aulas das trilhas que já começaste.
             </CardDescription>
           </div>
         </CardHeader>
