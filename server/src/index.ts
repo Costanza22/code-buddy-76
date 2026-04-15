@@ -38,8 +38,8 @@ function getLesson(trackId: string, lessonId: string) {
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
-/** localhost costuma alinhar melhor com o proxy do Vite no Windows. */
-const HOST = process.env.HOST ?? "localhost";
+/** 127.0.0.1 evita casos em que `localhost` resolve só para ::1 e o proxy/Postman falham no Windows. */
+const HOST = process.env.HOST ?? "127.0.0.1";
 
 app.use(
   cors({
@@ -64,6 +64,31 @@ app.use(
 );
 
 registerAuthRoutes(app);
+
+app.get("/api", (_req, res) => {
+  const base = `http://${HOST}:${PORT}`;
+  res.json({
+    service: "code-buddy-api",
+    base,
+    routes: [
+      "GET /api — esta lista",
+      "GET /api/health",
+      "GET /api/tracks",
+      "GET /api/tracks/:trackId",
+      "GET /api/tracks/:trackId/lessons/:lessonId",
+      "GET /api/auth/me",
+      "POST /api/auth/register — JSON: { email, password, name? }",
+      "POST /api/auth/login — JSON: { email, password }",
+      "POST /api/auth/logout",
+    ],
+    postman: {
+      exampleUrl: `${base}/api/auth/register`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      bodyFields: ["email (string)", "password (string, ≥8 caracteres)", "name (string, opcional)"],
+    },
+  });
+});
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "code-buddy-api", auth: true });
@@ -101,6 +126,13 @@ app.get("/api/tracks/:trackId/lessons/:lessonId", (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: `Cannot ${req.method} ${req.originalUrl}`,
+    hint: "Todas as rotas começam por /api. Ex.: POST /api/auth/register (corpo JSON). GET /api devolve a lista.",
+  });
 });
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

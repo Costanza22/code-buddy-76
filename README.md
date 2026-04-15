@@ -18,7 +18,7 @@ Aplicação web para aprender programação em **trilhas** (ex.: Python, JavaScr
 | Variável | Onde | Descrição |
 |----------|------|------------|
 | `PORT` | API | Porta do servidor (predefinido **3001**) |
-| `HOST` | API | Interface onde escuta (predefinido **localhost**, alinhado com o proxy do Vite) |
+| `HOST` | API | Interface onde escuta (predefinido **127.0.0.1**, alinhado com o proxy do Vite) |
 | `VITE_API_BASE_URL` | Frontend | Só a **origem** da API (ex. `https://api.teudominio.com`), **sem** `/api` no fim. Se acabar em `/api`, o cliente remove para evitar `/api/api/...`. Em dev, vazio + proxy do Vite. |
 
 Copia `.env.example` para `.env` se quiseres documentar valores locais.
@@ -49,12 +49,13 @@ npm run dev:server
 npm run dev
 ```
 
-Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://localhost:3001` (proxy no `vite.config.ts`).
+Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://127.0.0.1:3001` (proxy no `vite.config.ts`).
 
 ### Endpoints da API
 
 | Método | Caminho | Descrição |
 |--------|---------|-----------|
+| `GET` | `/api` | Lista de rotas e exemplo para Postman |
 | `GET` | `/api/health` | Estado do serviço |
 | `GET` | `/api/tracks` | Lista de trilhas |
 | `GET` | `/api/tracks/:trackId` | Uma trilha |
@@ -67,6 +68,13 @@ Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://l
 Contas ficam em `server/data/users.json` (gerado localmente; não commitar dados reais — está no `.gitignore`). Em produção define `SESSION_SECRET` forte.
 
 Os dados vêm de `src/data/lessons.ts`; a API serve uma cópia em JSON (`server/data/tracks.json`), gerada pelo script `npm run export-tracks`.
+
+### Postman (erro “Cannot POST” ou 404)
+
+1. Garante que a API está a correr: `npm run dev:server` (na raiz). Sem isto, o browser ou o Postman não têm servidor na porta **3001**.
+2. URL completa com prefixo **`/api`**: `http://127.0.0.1:3001/api/auth/register` (não uses `/auth/register` à raiz).
+3. Método **POST**, separador **Body** → **raw** → **JSON**, cabeçalho `Content-Type: application/json`. Corpo mínimo: `{"email":"tu@exemplo.pt","password":"peloMenos8"}`.
+4. Para confirmar rotas: **GET** `http://127.0.0.1:3001/api` ou **GET** `http://127.0.0.1:3001/api/health`.
 
 ### Outros scripts (frontend)
 
