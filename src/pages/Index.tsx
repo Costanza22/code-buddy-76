@@ -64,7 +64,7 @@ export default function Index() {
               <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Pega uma<br />e vai.</h2>
             </div>
             <p className="text-muted-foreground text-sm max-w-xs text-right hidden md:block">
-              Aulas de 5 min. Escreve direto no navegador. Sem instalar nada, sem desculpa.
+              Aulas curtas. Práticas no editor do site, sem instalar nada.
             </p>
           </div>
 
