@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import InputDomReference from "@/components/InputDomReference";
 import { NavAuth } from "@/components/NavAuth";
 import { useLesson } from "@/hooks/use-tracks-api";
+import {
+  markLessonPassed,
+  notifyLessonRunUpdated,
+  setLessonLastRunResult,
+} from "@/lib/lessonRunState";
 import { Button } from "@/components/ui/button";
+
+type RunFeedback = "idle" | "ok" | "wrong" | "error" | "none";
 
 export default function LessonPage() {
   const { trackId, lessonId } = useParams();
@@ -10,14 +18,17 @@ export default function LessonPage() {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  const [runFeedback, setRunFeedback] = useState<RunFeedback>("idle");
+  /** Texto usado na última comparação com o gabarito (para mostrar em “Errado”). */
+  const [lastComparedActual, setLastComparedActual] = useState("");
 
   useEffect(() => {
     if (!data) return;
     setCode(data.lesson.codeTemplate);
     setOutput(null);
     setShowHint(false);
-    setCompleted(false);
+    setRunFeedback("idle");
+    setLastComparedActual("");
   }, [data]);
 
   if (isPending) {
@@ -50,6 +61,7 @@ export default function LessonPage() {
   }
 
   const { lesson, track, index, next } = data;
+  const hasAutograde = Boolean(lesson.expectedOutput?.trim());
 
   const handleRun = () => {
     try {
@@ -89,13 +101,34 @@ export default function LessonPage() {
         }
       }
 
-      setOutput(lines.length > 0 ? lines.join("\n") : "(sem saída — tente usar print() ou console.log())");
+      const joined = lines.join("\n");
+      const actualTrim = joined.trim();
+      setLastComparedActual(actualTrim);
+      setOutput(joined.length > 0 ? joined : "(sem saída — tente usar print() ou console.log())");
 
-      if (lesson.expectedOutput && lines.join("\n").trim() === lesson.expectedOutput.trim()) {
-        setCompleted(true);
+      if (!hasAutograde) {
+        setRunFeedback("none");
+        return;
+      }
+
+      const expectedTrim = lesson.expectedOutput.trim();
+      if (actualTrim === expectedTrim) {
+        setRunFeedback("ok");
+        markLessonPassed(lesson.id);
+        setLessonLastRunResult(lesson.id, true);
+        notifyLessonRunUpdated();
+      } else {
+        setRunFeedback("wrong");
+        setLessonLastRunResult(lesson.id, false);
+        notifyLessonRunUpdated();
       }
     } catch (e) {
       setOutput(`Erro: ${e instanceof Error ? e.message : "algo deu errado"}`);
+      setRunFeedback("error");
+      if (hasAutograde) {
+        setLessonLastRunResult(lesson.id, false);
+        notifyLessonRunUpdated();
+      }
     }
   };
 
@@ -157,15 +190,22 @@ export default function LessonPage() {
               aria-label="Editor de código da aula"
               placeholder="Escreve o teu código aqui…"
             />
-            <div className="border-t-2 border-border px-4 py-3 flex items-center justify-between">
+            <div className="border-t-2 border-border px-4 py-3 flex flex-wrap items-center justify-between gap-2">
               <Button type="button" onClick={handleRun} size="sm" className="font-mono uppercase tracking-wider text-xs">
                 Rodar ▶
               </Button>
-              {completed && (
-                <span className="font-mono text-xs text-primary font-bold uppercase tracking-wider">
-                  ✓ Correto!
-                </span>
-              )}
+              <div className="font-mono text-xs uppercase tracking-wider text-right min-h-[1.25rem]">
+                {runFeedback === "ok" && hasAutograde && (
+                  <span className="text-primary font-bold">✓ Correto</span>
+                )}
+                {runFeedback === "wrong" && hasAutograde && (
+                  <span className="text-destructive font-bold">✗ Errado</span>
+                )}
+                {runFeedback === "error" && <span className="text-destructive font-bold">✗ Erro ao executar</span>}
+                {runFeedback === "none" && output !== null && (
+                  <span className="text-muted-foreground font-normal normal-case">Sem correção automática nesta aula</span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -180,8 +220,29 @@ export default function LessonPage() {
             <div className="mt-4 border-2 border-border bg-card p-4">
               <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider block mb-2">Saída</span>
               <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">{output}</pre>
+              {runFeedback === "wrong" && hasAutograde && (
+                <div className="mt-4 pt-4 border-t-2 border-border space-y-2 text-xs">
+                  <p className="font-mono text-muted-foreground uppercase tracking-wider">Comparação com o gabarito</p>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-destructive block mb-1">Obtido</span>
+                      <pre className="font-mono text-xs text-foreground whitespace-pre-wrap bg-muted/40 p-2 border border-border max-h-40 overflow-auto">
+                        {lastComparedActual || "(vazio)"}
+                      </pre>
+                    </div>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-primary block mb-1">Esperado</span>
+                      <pre className="font-mono text-xs text-foreground whitespace-pre-wrap bg-muted/40 p-2 border border-border max-h-40 overflow-auto">
+                        {lesson.expectedOutput.trim()}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
+
+          {track.id === "html-css" && <InputDomReference />}
 
           <div className="mt-12 flex items-center justify-between border-t-2 border-border pt-6">
             {index > 0 && data.prev ? (
