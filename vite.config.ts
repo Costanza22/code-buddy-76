@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    /** Se 8080 estiver ocupada, falha em vez de saltar para 8081 (evita confusão com o README e URLs). */
+    strictPort: true,
     hmr: {
       overlay: false,
     },

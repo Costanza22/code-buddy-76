@@ -51,6 +51,8 @@ npm run dev
 
 Abre `http://localhost:8080`. Os pedidos a `/api/*` são enviados para `http://127.0.0.1:3001` (proxy no `vite.config.ts`).
 
+O Vite está com **`strictPort: true`**: a interface usa sempre **8080**. Se aparecer erro de porta ocupada, fecha outro `npm run dev` (ou outro serviço na 8080) ou altera `server.port` em `vite.config.ts`. Sem isto, o Vite costumava subir em **8081** automaticamente e desalinhar do que está no README.
+
 ### Endpoints da API
 
 | Método | Caminho | Descrição |
