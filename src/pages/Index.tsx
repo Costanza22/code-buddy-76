@@ -26,16 +26,13 @@ export default function Index() {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-16 items-start">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
-                De graça · Em português · Vai no seu ritmo
+                Plataforma para iniciantes
               </p>
-              <h1 className="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-6">
+              <h1 className="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-8">
                 Você não<br />
                 precisa de<br />
                 <span className="highlight-box -rotate-1 inline-block mt-1">curso caro.</span>
               </h1>
-              <p className="text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-                Trilhas com enunciado curto — editor no browser, corres até a saída bater certo com o exercício. Sem instalar IDE nem SDK.
-              </p>
               <div className="flex flex-wrap gap-3">
                 <Link to="/trilha/python">
                   <Button size="lg" className="font-mono uppercase tracking-wider text-sm">
